@@ -46,7 +46,7 @@ const state = {
     company: {
         name: 'PRO MANAGER',
         address: 'Votre Adresse\nCode Postal Ville',
-        phone: '00 00 00 00 00',
+        phone: '06 00 00 00 00',
         email: 'contact@exemple.com',
         siret: '000 000 000 00000',
         website: 'votre-site.com',
@@ -55,12 +55,12 @@ const state = {
     },
     notes: [],
     services: [
-        { id: 1, name: 'Formule LUXE (Int + Ext)', desc: 'Nettoyage intégral : Extérieur manuel, jantes, séchage, démoustiquage, joints, détachage sièges, plastiques, cuirs, aspiration, tapis, poils, sable, parfum, vitres, coffre.', price: 165 },
-        { id: 2, name: 'Intérieur Prestige', desc: 'Détachage sièges, plastiques, cuirs, aspiration complète, tapis, poils, sable, parfum, vitres, coffre.', price: 125 },
-        { id: 3, name: 'Intérieur Clean', desc: 'Aspiration complète, plastiques, cuirs rapide, tapis, sable, parfum, vitres.', price: 95 },
-        { id: 4, name: 'Extérieur Brillance', desc: 'Lavage manuel approfondi, brillance carrosserie, jantes, séchage minutieux, démoustiquage.', price: 65 },
-        { id: 5, name: 'Nettoyage Moteur', desc: 'Dégraissage, rénovation plastiques, décontamination, finition détaillée.', price: 70 },
-        { id: 6, name: 'Rénovation Optique Phares', desc: 'Ponçage multi-grains, élimination oxydation, résultat brillant (la paire).', price: 90 }
+        { id: 1, name: 'TEST 1', desc: 'Je ne sais pas quoi dire...', price: 500 },
+        { id: 2, name: 'TEST 2', desc: 'Et pourquoi pas ???!!', price: 275 },
+        { id: 3, name: 'TEST 3', desc: 'TikTok est mauvais...', price: 5425 },
+        { id: 4, name: 'TEST 4', desc: 'Merci pour votre confiance <3', price: 8999 },
+        { id: 5, name: 'TEST 5', desc: 'S et E', price: 150 },
+        { id: 6, name: 'TEST 6', desc: 'WOW', price: 10 }
     ],
     counters: { facture: 100, devis: 48 },
     documents: [],
