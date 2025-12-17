@@ -26,6 +26,21 @@
 </head>
 
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i data-lucide="car"></i>
+            </div>
+            <div class="loading-text">Connexion au cloud...</div>
+        </div>
+    </div>
+
+    <!-- Sync Toast -->
+    <div class="sync-toast" id="sync-toast">
+        <i data-lucide="cloud"></i>
+        <span>Synchronisé</span>
+    </div>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast">
@@ -664,6 +679,10 @@
             </div>
         </div>
     </div>
+
+    <!-- Firebase SDK (Compat for file:// support) -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
     <!-- External Libraries -->
     <script src="https://unpkg.com/lucide@latest"></script>
