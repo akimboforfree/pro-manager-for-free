@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro Manager by KEV AKIMBO</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AUTO CLEAN 40">
+    <link rel="apple-touch-icon" href="icon-180.png">
+    <meta name="theme-color" content="#050505">
+    <link rel="icon" type="image/png" href="icon-192.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <i data-lucide="car"></i>
+            </div>
+            <div class="loading-text">Chargement...</div>
+        </div>
+    </div>
+
+    <!-- Sync Toast -->
+    <div class="sync-toast" id="sync-toast">
+        <i data-lucide="save"></i>
+        <span>Sauvegardé</span>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i data-lucide="check-circle"></i>
+        <span id="toast-message">Message</span>
+    </div>
+
+    <!-- Ambient Background -->
+    <div class="ambient-bg"></div>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <!-- Logo Removed as requested -->
+                <div class="brand-text">
+                    <h1>PRO MANAGER</h1>
+                    <span>by KEV AKIMBO</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-label">Menu</div>
+                <button class="nav-item active" data-view="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Tableau de bord</span>
+                </button>
+                <button class="nav-item" data-view="editor">
+                    <i data-lucide="file-text"></i>
+                    <span>Facture & Devis</span>
+                </button>
+                <button class="nav-item" data-view="history">
+                    <i data-lucide="clock"></i>
+                    <span>Historique</span>
+                </button>
+                <button class="nav-item" data-view="accounting">
+                    <i data-lucide="calculator"></i>
+                    <span>Comptabilité</span>
+                </button>
+                <div class="nav-label">Système</div>
+                <button class="nav-item" data-view="settings">
+                    <i data-lucide="settings"></i>
+                    <span>Configuration</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-user">
+                <div class="user-card">
+                    <div class="user-avatar">PM</div>
+                    <div class="user-info">
+                        <span class="name">Pro Manager</span>
+                        <span class="status">v2.2 • Local</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Mobile Header -->
+            <header class="mobile-header">
+                <div class="mobile-brand">
+                    <span class="mobile-title">PRO MANAGER</span>
+                    <span class="mobile-subtitle">by KEV AKIMBO</span>
+                </div>
+                <div class="mobile-sync-dot"></div>
+            </header>
+
+            <!-- Top Bar (Desktop) -->
+            <header class="top-bar">
+                <div class="page-info">
+                    <h2 id="page-title">Tableau de bord</h2>
+                    <div class="date" id="current-date"></div>
+                </div>
+            </header>
+
+            <!-- ====== DASHBOARD VIEW ====== -->
+            <section id="view-dashboard" class="view active">
+                <div class="dashboard-grid">
+                    <!-- Stats -->
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="euro"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-revenue">0,00 €</div>
+                                <div class="stat-label">Chiffre d'Affaires</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-docs">0</div>
+                                <div class="stat-label">Documents</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="stat-avg">0,00 €</div>
+                                <div class="stat-label">Panier Moyen</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Widget -->
+                    <div class="glass-card" style="margin-bottom: 2rem;">
+                        <div class="card-title">
+                            <i data-lucide="sticky-note"></i>
+                            Notes
+                        </div>
+                        <div class="notes-container">
+                            <div class="input-row" style="margin-bottom: 1rem;">
+                                <input type="text" id="note-input" class="input"
+                                    placeholder="Ajouter une note rapide..." style="margin-bottom: 0;">
+                                <button class="btn btn-primary" id="btn-add-note">
+                                    <i data-lucide="plus"></i>
+                                </button>
+                            </div>
+                            <div id="notes-list" class="notes-list">
+                                <!-- Notes will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="charts-row">
+                        <div class="glass-card">
+                            <div class="card-title">
+                                <i data-lucide="bar-chart-3"></i>
+                                Chiffre d'Affaires
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="glass-card">
+                            <div class="card-title">
+                                <i data-lucide="pie-chart"></i>
+                                Top Services
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="servicesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="glass-card">
+                        <div class="card-title">
+                            <i data-lucide="activity"></i>
+                            Activité Récente
+                        </div>
+                        <div class="table-wrapper">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Client</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th class="text-right">Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-activities"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== EDITOR VIEW ====== -->
+            <section id="view-editor" class="view">
+                <div class="editor-layout">
+                    <!-- Form Panel -->
+                    <div class="form-panel">
+                        <!-- Document Type -->
+                        <div class="glass-card">
+                            <div class="doc-type-selector">
+                                <button class="doc-type-btn active" id="btn-facture">
+                                    <i data-lucide="file-text"></i>
+                                    <span>Facture</span>
+                                </button>
+                                <button class="doc-type-btn" id="btn-devis">
+                                    <i data-lucide="file-check"></i>
+                                    <span>Devis</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Document Info -->
+                        <div class="glass-card">
+                            <div class="card-title">
+                                <i data-lucide="file"></i>
+                                Document
+                            </div>
+                            <div class="form-card-body">
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Date</label>
+                                        <input type="date" id="doc-date" class="input">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>N° Auto</label>
+                                        <input type="text" id="doc-number-auto" class="input" readonly>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>N° Manuel (optionnel)</label>
+                                    <input type="text" id="doc-number-manual" class="input"
+                                        placeholder="Laisser vide pour auto">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Client Info -->
+                        <div class="glass-card">
+                            <div class="card-title">
+                                <i data-lucide="user"></i>
+                                Client
+                            </div>
+                            <div class="form-card-body">
+                                <div class="input-group">
+                                    <label>Nom / Société *</label>
+                                    <input type="text" id="client-name" class="input" placeholder="Nom du client">
+                                </div>
+                                <div class="input-group">
+                                    <label>Adresse</label>
+                                    <textarea id="client-address" class="input" placeholder="Adresse complète"></textarea>
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Téléphone</label>
+                                        <input type="tel" id="client-phone" class="input">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Email</label>
+                                        <input type="email" id="client-email" class="input">
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>SIRET (optionnel)</label>
+                                    <input type="text" id="client-siret" class="input">
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <label>Véhicule</label>
+                                        <input type="text" id="client-vehicle" class="input" placeholder="Marque Modèle">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Immatriculation</label>
+                                        <input type="text" id="client-plate" class="input" placeholder="AA-123-BB">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lines -->
+                        <div class="glass-card">
+                            <div class="card-title">
+                                <i data-lucide="list"></i>
+                                Prestations
+                            </div>
+                            <div class="form-card-body">
+                                <div class="input-group">
+                                    <label>Ajouter depuis le catalogue</label>
+                                    <select id="catalog-select" class="input">
+                                        <option value="">-- Choisir une prestation --</option>
+                                    </select>
+                                </div>
+                                <div id="lines-container"></div>
+                                <button class="btn btn-secondary btn-block" id="btn-add-line">
+                                    <i data-lucide="plus"></i>
+                                    Ligne vide
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="glass-card">
+                            <div class="action-buttons">
+                                <button class="btn btn-primary" id="btn-save-doc">
+                                    <i data-lucide="save"></i>
+                                    Enregistrer
+                                </button>
+                                <button class="btn btn-secondary" id="btn-download-pdf">
+                                    <i data-lucide="download"></i>
+                                    Télécharger PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview Panel -->
+                    <div class="preview-panel">
+                        <div class="preview-header">
+                            <span>Aperçu PDF</span>
+                            <div class="preview-actions">
+                                <button class="btn btn-sm btn-primary" id="btn-save-doc-mobile">
+                                    <i data-lucide="save"></i>
+                                </button>
+                                <button class="btn btn-sm btn-secondary" id="btn-download-pdf-mobile">
+                                    <i data-lucide="download"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="paper-container">
+                            <div id="pdf-preview" class="paper"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== HISTORY VIEW ====== -->
+            <section id="view-history" class="view">
+                <div class="glass-card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <i data-lucide="clock"></i>
+                            Historique des documents
+                        </div>
+                        <div class="search-box">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="search-history" placeholder="Rechercher...">
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Numéro</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th class="text-right">Montant</th>
+                                    <th class="text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="history-list"></tbody>
+                        </table>
+                    </div>
+                    <div id="history-empty" class="empty-state" style="display:none;">
+                        <i data-lucide="inbox"></i>
+                        <p>Aucun document enregistré</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== ACCOUNTING VIEW ====== -->
+            <section id="view-accounting" class="view">
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <div class="card-title">
+                        <i data-lucide="calendar"></i>
+                        Ce mois-ci
+                    </div>
+                    <div class="stats-row" style="margin-top: 1rem;">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="acc-invoices-month">0</div>
+                                <div class="stat-label">Factures</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i data-lucide="file-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="acc-quotes-month">0</div>
+                                <div class="stat-label">Devis</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="euro"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="acc-revenue-month">0,00 €</div>
+                                <div class="stat-label">CA du mois</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="margin-bottom: 2rem;">
+                    <div class="card-title">
+                        <i data-lucide="trending-up"></i>
+                        Cette année
+                    </div>
+                    <div class="stats-row" style="margin-top: 1rem;">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i data-lucide="file-text"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="acc-invoices-year">0</div>
+                                <div class="stat-label">Factures</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i data-lucide="file-check"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="acc-quotes-year">0</div>
+                                <div class="stat-label">Devis</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i data-lucide="euro"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="acc-revenue-year">0,00 €</div>
+                                <div class="stat-label">CA annuel</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <div class="card-title">
+                        <i data-lucide="table"></i>
+                        Détail par mois
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mois</th>
+                                    <th>Factures</th>
+                                    <th>Devis</th>
+                                    <th class="text-right">CA</th>
+                                </tr>
+                            </thead>
+                            <tbody id="acc-monthly-breakdown"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ====== SETTINGS VIEW ====== -->
+            <section id="view-settings" class="view">
+                <div class="settings-grid">
+                    <!-- Company Settings -->
+                    <div class="glass-card">
+                        <div class="card-title">
+                            <i data-lucide="building"></i>
+                            Entreprise
+                        </div>
+
+                        <div class="logo-upload">
+                            <img id="logo-preview" src="" alt="Logo">
+                            <label for="logo-upload" class="btn btn-secondary">
+                                <i data-lucide="upload"></i>
+                                Changer le logo
+                            </label>
+                            <input type="file" id="logo-upload" accept="image/*" style="display:none;">
+                        </div>
+
+                        <div class="form-card-body" style="padding: 0;">
+                            <div class="input-group">
+                                <label>Nom de l'entreprise</label>
+                                <input type="text" id="conf-company" class="input">
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label>SIRET</label>
+                                    <input type="text" id="conf-siret" class="input">
+                                </div>
+                                <div class="input-group">
+                                    <label>Téléphone</label>
+                                    <input type="text" id="conf-phone" class="input">
+                                </div>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label>Email</label>
+                                    <input type="email" id="conf-email" class="input">
+                                </div>
+                                <div class="input-group">
+                                    <label>Site Web</label>
+                                    <input type="text" id="conf-website" class="input">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Adresse</label>
+                                <textarea id="conf-address" class="input"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Mentions légales</label>
+                                <textarea id="conf-legal" class="input"></textarea>
+                            </div>
+                            <div class="input-row">
+                                <div class="input-group">
+                                    <label>N° Facture</label>
+                                    <input type="number" id="conf-counter-facture" class="input">
+                                </div>
+                                <div class="input-group">
+                                    <label>N° Devis</label>
+                                    <input type="number" id="conf-counter-devis" class="input">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="btn-save-settings">
+                                <i data-lucide="check"></i>
+                                Enregistrer
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Catalog Settings -->
+                    <div class="glass-card">
+                        <div class="card-title">
+                            <i data-lucide="tag"></i>
+                            Catalogue des prestations
+                        </div>
+
+                        <div class="catalog-form">
+                            <h4 id="catalog-form-title">Ajouter une prestation</h4>
+                            <div class="form-card-body" style="padding: 0;">
+                                <div class="input-group">
+                                    <input type="text" id="service-name" class="input"
+                                        placeholder="Nom de la prestation">
+                                </div>
+                                <div class="input-group">
+                                    <textarea id="service-desc" class="input" placeholder="Description (optionnel)"
+                                        style="min-height: 60px;"></textarea>
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
+                                        <input type="number" id="service-price" class="input" placeholder="Prix €">
+                                    </div>
+                                    <button class="btn btn-primary" id="btn-add-service">Ajouter</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="catalog-list">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th class="text-right">Prix</th>
+                                        <th class="text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="catalog-list"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div id="hidden-pdf-container" style="position:fixed;top:-9999px;left:-9999px;width:794px;"></div>
+
+        <!-- Preview Modal -->
+        <div id="preview-modal" class="preview-modal-backdrop">
+            <div class="preview-modal-content">
+                <div class="card-header"
+                    style="padding: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0;">
+                    <div class="card-title" style="font-size: 1.1rem;">
+                        <i data-lucide="file-text"></i>
+                        <span id="preview-modal-title">Aperçu</span>
+                    </div>
+                    <div class="action-btns">
+                        <button class="action-btn" id="modal-download-btn" title="Télécharger PDF">
+                            <i data-lucide="download"></i>
+                        </button>
+                        <button class="action-btn" onclick="App.closePreviewModal()" title="Fermer">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="paper-container"
+                    style="background: #111; padding: 2rem; overflow: auto; height: 100%; display: flex; align-items: flex-start; justify-content: center;">
+                    <div id="modal-pdf-preview" class="paper"
+                        style="transform: scale(0.85); transform-origin: top center; margin-bottom: 2rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NO FIREBASE - Local Storage Only -->
+
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF pour génération PDF native (fonctionne sur mobile et desktop) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- App -->
+    <script src="app.js"></script>
+</body>
+
+</html>
